@@ -28,20 +28,23 @@ public:
         }
         addr = static_cast<void *>(static_cast<char *>(addr) + offset);
         size = patch.size();
-        original.resize(size);
-        memcpy(&original[0], addr, size);
+        original.clear();
+        for (unsigned i = 0; i < size; i++)
+            original.push_back(*reinterpret_cast<unsigned char *>((uintptr_t) addr + i));
     }
     BytePatch(uintptr_t addr, std::vector<unsigned char> patch) : addr{ reinterpret_cast<void *>(addr) }, patch_bytes{ patch }
     {
         size = patch.size();
-        original.resize(size);
-        memcpy(&original[0], reinterpret_cast<void *>(addr), size);
+        original.clear();
+        for (unsigned i = 0; i < size; i++)
+            original.push_back(*reinterpret_cast<unsigned char *>((uintptr_t) addr + i));
     }
     BytePatch(void *addr, std::vector<unsigned char> patch) : addr{ addr }, patch_bytes{ patch }
     {
         size = patch.size();
-        original.resize(size);
-        memcpy(&original[0], addr, size);
+        original.clear();
+        for (unsigned i = 0; i < size; i++)
+            original.push_back(*reinterpret_cast<unsigned char *>((uintptr_t) addr + i));
     }
 
     void Patch()
